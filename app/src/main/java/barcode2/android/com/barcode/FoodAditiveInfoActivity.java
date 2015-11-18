@@ -58,28 +58,30 @@ public class FoodAditiveInfoActivity extends Activity {
 
         @Override
         protected Cursor doInBackground(String... strings) {
-            return db.query(Constants.ADDITIVE_INFO,
-                    new String[]{Constants.FOOD_ADDITIVES, Constants.ADDITIVE_FULL_NAME, Constants.FUNCTION, Constants.DISEASES},
-                    Constants.FOOD_ADDITIVES + " = ?", new String[]{strings[0]}, null, null, null);
+//            return db.query(Constants.ADDITIVE_INFO,
+//                    new String[]{Constants.FOOD_ADDITIVES, Constants.ADDITIVE_FULL_NAME, Constants.FUNCTION, Constants.DISEASES},
+//                    Constants.FOOD_ADDITIVES + " = ?", new String[]{strings[0]}, null, null, null);
+
+            return null;
         }
 
         @Override
         protected void onPostExecute(Cursor cursor) {
             super.onPostExecute(cursor);
-            if(cursor.getCount() > 0){
-                if(cursor.moveToFirst()) {
-                    DatabaseUtils.dumpCursor(cursor);
-                    String main = cursor.getString(0);
-                    String full = cursor.getString(1);
-                    String function1 = cursor.getString(2);
-                    String diseases1 = cursor.getString(3);
-
-                    mainText.setText(main);
-                    additiveText.setText(full);
-                    function.setText(function1);
-                    diseases.setText(diseases1);
-                }
-            }
+//            if(cursor.getCount() > 0){
+//                if(cursor.moveToFirst()) {
+//                    DatabaseUtils.dumpCursor(cursor);
+//                    String main = cursor.getString(0);
+//                    String full = cursor.getString(1);
+//                    String function1 = cursor.getString(2);
+//                    String diseases1 = cursor.getString(3);
+//
+//                    mainText.setText(main);
+//                    additiveText.setText(full);
+//                    function.setText(function1);
+//                    diseases.setText(diseases1);
+//                }
+//            }
         }
     }
 }

@@ -3,17 +3,11 @@ package barcode2.android.com.barcode;
 import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
-import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.graphics.Color;
-import android.graphics.ColorFilter;
-import android.graphics.LightingColorFilter;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
@@ -45,13 +39,12 @@ public class ProductActivity extends Activity {
         SQLiteOpenHelper helper = new InnerDatabase(this);
         db = helper.getReadableDatabase();
 
-        String q = "SELECT " + Constants.FOOD_ADDITIVES_TABLE + "._id, " + Constants.FOOD_ADDITIVES + " FROM " +
-                Constants.FOOD_ADDITIVES_TABLE + " INNER JOIN " + Constants.PRODUCTS_INFO + " ON " +
-                Constants.PRODUCTS_INFO + "._id = " + Constants.FOOD_ADDITIVES_TABLE+"."+Constants.PRODUCT_ID + " WHERE " + Constants.BARCODE + " = ?";
+        String q = "SELECT aa._id, aa." + Constants.FOOD_ADDITIVES + " FROM " +
+                Constants.FOOD_ADDITIVES_TABLE + " as aa INNER JOIN " + Constants.PRODUCTS_INFO_AND_FOOD_ADDITIVES_TABLE +
+                " AS bb ON aa._id = bb." + Constants.FOOD_ADDITIVES_ID + " INNER JOIN " + Constants.PRODUCTS_INFO +
+                " AS cc ON bb." + Constants.PRODUCT_ID + " = cc._id WHERE cc." + Constants.BARCODE + " = ?";
 
         cursor = db.rawQuery(q, new String[]{barcode});
-
-        DatabaseUtils.dumpCursor(cursor);
 
         adapter = new SimpleCursorAdapter(this, R.layout.product_item_layout, cursor,
                   new String[]{Constants.FOOD_ADDITIVES}, new int[]{R.id.text}, 0);
