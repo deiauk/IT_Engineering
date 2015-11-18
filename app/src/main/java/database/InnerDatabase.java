@@ -32,6 +32,10 @@ public class InnerDatabase extends SQLiteOpenHelper {
                 " (_id INTEGER PRIMARY KEY AUTOINCREMENT, " + Constants.PRODUCT_ID + " INTEGER, " +
                 Constants.FOOD_ADDITIVES_ID + " INTEGER);");
 
+        db.execSQL("CREATE TABLE " + Constants.ADDITIVE_INFO + " (_id INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                Constants.ADDITIVE_ID + " INTEGER, " + Constants.ADDITIVE_FULL_NAME + " TEXT, " + Constants.FUNCTION +
+                " TEXT, " + Constants.DISEASES + " TEXT);");
+
 
         fillDatabase(db);
     }
@@ -39,7 +43,9 @@ public class InnerDatabase extends SQLiteOpenHelper {
     @Override
     public void onUpgrade(SQLiteDatabase db, int i, int i1) {
         db.execSQL("DROP TABLE IF EXISTS " + Constants.PRODUCTS_INFO);
-
+        db.execSQL("DROP TABLE IF EXISTS " + Constants.FOOD_ADDITIVES_TABLE);
+        db.execSQL("DROP TABLE IF EXISTS " + Constants.PRODUCTS_INFO_AND_FOOD_ADDITIVES_TABLE);
+        db.execSQL("DROP TABLE IF EXISTS " + Constants.ADDITIVE_INFO);
         onCreate(db);
     }
 
@@ -55,9 +61,18 @@ public class InnerDatabase extends SQLiteOpenHelper {
         db.insert(Constants.FOOD_ADDITIVES_TABLE, null, values);
     }
 
-    public void setInfoAboutAdditive(SQLiteDatabase db, String text, String text2, String text3, String text4){
+    /*
+      db.execSQL("CREATE TABLE " + Constants.ADDITIVE_INFO + " (_id INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                Constants.ADDITIVE_ID + " INTEGER, " + Constants.ADDITIVE_FULL_NAME + " TEXT, " + Constants.FUNCTION +
+                " TEXT, " + Constants.DISEASES + " TEXT);");
+     */
+    public void setInfoAboutAdditive(SQLiteDatabase db, int id, String fullName, String function, String diseases){
         ContentValues values = new ContentValues();
-
+        values.put(Constants.ADDITIVE_ID, id);
+        values.put(Constants.ADDITIVE_FULL_NAME, fullName);
+        values.put(Constants.FUNCTION, function);
+        values.put(Constants.DISEASES, diseases);
+        db.insert(Constants.ADDITIVE_INFO, null, values);
     }
 
     public void setRelationship(SQLiteDatabase db, int productID, int foodAdditiveID){
@@ -134,8 +149,7 @@ public class InnerDatabase extends SQLiteOpenHelper {
         setRelationship(db, 1, 42);
         setRelationship(db, 1, 16);
 
-
-        //setInfoAboutAdditive(db, 1, "Mononatrio glutamatas", "Aromato ir skonio stipriklis", "Alergija, astma, migrena, vėžiniai susirgimai");
-        //setInfoAboutAdditive(db, 2, "Natrio benzoatas", "Konservantas", "Alergija, astma, hiperaktyvumas, vėžiniai susirgimai");
+        setInfoAboutAdditive(db, 1, "Mononatrio glutamatas", "Aromato ir skonio stipriklis", "Alergija, astma, migrena, vėžiniai susirgimai");
+        setInfoAboutAdditive(db, 2, "Natrio benzoatas", "Konservantas", "Alergija, astma, hiperaktyvumas, vėžiniai susirgimai");
     }
 }
