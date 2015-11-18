@@ -1,6 +1,7 @@
 package barcode2.android.com.barcode;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
@@ -10,6 +11,7 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.SimpleCursorAdapter;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import database.InnerDatabase;
@@ -18,7 +20,6 @@ public class SearchInDatabaseActivity extends Activity {
 
     private SearchView searchView;
     private SQLiteDatabase db;
-    private SQLiteOpenHelper helper;
     private SimpleCursorAdapter adapter;
     private Cursor cursor;
     private ListView listView;
@@ -63,7 +64,11 @@ public class SearchInDatabaseActivity extends Activity {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Toast.makeText(SearchInDatabaseActivity.this, "clicked on " + i + " long " + l + adapterView.getAdapter().getItem(i), Toast.LENGTH_SHORT).show();
+                String foodAdditive = ((TextView) view.findViewById(android.R.id.text1)).getText().toString();
+                Intent intent = new Intent(getApplicationContext(), FoodAditiveInfoActivity.class);
+                Toast.makeText(SearchInDatabaseActivity.this, foodAdditive, Toast.LENGTH_SHORT).show();
+                intent.putExtra("foodAdditive", foodAdditive);
+                startActivity(intent);
             }
         });
 

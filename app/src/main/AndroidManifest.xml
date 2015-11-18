@@ -24,6 +24,10 @@
             android:name=".SearchInDatabaseActivity"
             android:label="@string/title_activity_search_in_database" >
         </activity>
+        <activity android:name=".ProductActivity" >
+        </activity>
+        <activity android:name=".FoodAditiveInfoActivity" >
+        </activity>
     </application>
 
 </manifest>

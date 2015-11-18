@@ -5,4 +5,6 @@
     <string name="action_settings">Settings</string>
     <string name="title_activity_database">DatabaseActivity</string>
     <string name="title_activity_search_in_database">SearchInDatabase</string>
+    <string name="title_activity_product_information">ProductInformationActivity</string>
+    <string name="title_activity_main2">Main2Activity</string>
 </resources>

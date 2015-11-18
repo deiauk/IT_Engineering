@@ -13,14 +13,11 @@ import database.InnerDatabase;
 public class MainActivity extends Activity {
 
     private IntentIntegrator integrator;
-    private InnerDatabase database;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        database = new InnerDatabase(this);
 
         integrator = new IntentIntegrator(this);
         integrator.setDesiredBarcodeFormats(IntentIntegrator.ONE_D_CODE_TYPES);
@@ -41,8 +38,10 @@ public class MainActivity extends Activity {
         IntentResult scanResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, intent);
         if (scanResult != null) {
             String result = scanResult.getContents();
-            if(result.length() > 0){
-                Toast.makeText(MainActivity.this, result, Toast.LENGTH_LONG).show();
+            if(result != null && result.length() > 0){
+                Intent intent2 = new Intent(this, ProductActivity.class);
+                intent2.putExtra("barcode", result);
+                startActivity(intent2);
             }
         }
     }

@@ -18,67 +18,23 @@ public class InnerDatabase extends SQLiteOpenHelper {
     private static final String DB_NAME = "PRODUCTS_DATABASE";
     private static final int DB_VERSION = 1;
 
-    private static ContentValues values = new ContentValues();
-
     public InnerDatabase(Context context){
         super(context, DB_NAME, null, DB_VERSION);
     }
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        db.execSQL("CREATE TABLE " + Constants.PRODUCTS_INFO + " (_id INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                Constants.BARCODE + " INTEGER, " + Constants.FOOD_ADDITIVES_ID + " INTEGER, " +
-                Constants.BASIC_INFO_ID + " INTEGER, " + Constants.PICTURE_ID + " INTEGER);");
+        db.execSQL("CREATE TABLE " + Constants.PRODUCTS_INFO +
+                " (_id INTEGER PRIMARY KEY AUTOINCREMENT, " + Constants.BARCODE + " BIGINT);");
 
-        db.execSQL("CREATE TABLE " + Constants.FOOD_ADDITIVES_TABLE + " (_id INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                Constants.FOOD_ADDITIVES + " TEXT);");
+        db.execSQL("CREATE TABLE " +
+                Constants.FOOD_ADDITIVES_TABLE + " (_id INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                Constants.FOOD_ADDITIVES + " TEXT, " + Constants.PRODUCT_ID + " INTEGER);");
 
-        db.execSQL("CREATE TABLE " + Constants.FOOD_ADDITIVES_MAIN_TABLE + " (_id INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                Constants.FOOD_ADDITIVES_ID + " INTEGER, " + Constants.BASIC_INFO_ID + " INTEGER);");
+        db.execSQL("CREATE TABLE " + Constants.ADDITIVE_INFO + " (_id INTEGER PRIMARY KEY AUTOINCREMENT, " +
+            Constants.FOOD_ADDITIVES + " TEXT, " + Constants.ADDITIVE_FULL_NAME + " TEXT, " + Constants.FUNCTION + " TEXT, " + Constants.DISEASES + " TEXT);");
 
-        db.execSQL("CREATE TABLE " + Constants.BASIC_INFO_TABLE + " (_id INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                Constants.BASIC_INFO + " TEXT);");
-
-        init(db, "E621");
-        init(db, "E523");
-        init(db, "E571");
-        init(db, "E651");
-        init(db, "E125");
-        init(db, "E765");
-        init(db, "E535");
-        init(db, "E843");
-        init(db, "E678");
-        init(db, "E455");
-        init(db, "E621");
-        init(db, "E523");
-        init(db, "E571");
-        init(db, "E651");
-        init(db, "E125");
-        init(db, "E765");
-        init(db, "E535");
-        init(db, "E843");
-        init(db, "E678");
-        init(db, "E455");
-        init(db, "E621");
-        init(db, "E523");
-        init(db, "E571");
-        init(db, "E651");
-        init(db, "E125");
-        init(db, "E765");
-        init(db, "E535");
-        init(db, "E843");
-        init(db, "E678");
-        init(db, "E455");
-        init(db, "E621");
-        init(db, "E523");
-        init(db, "E571");
-        init(db, "E651");
-        init(db, "E125");
-        init(db, "E765");
-        init(db, "E535");
-        init(db, "E843");
-        init(db, "E678");
-        init(db, "E455");
+        fillDatabase(db);
     }
 
     @Override
@@ -87,24 +43,55 @@ public class InnerDatabase extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + Constants.FOOD_ADDITIVES_TABLE);
         db.execSQL("DROP TABLE IF EXISTS " + Constants.FOOD_ADDITIVES_MAIN_TABLE);
         db.execSQL("DROP TABLE IF EXISTS " + Constants.BASIC_INFO_TABLE);
+        db.execSQL("DROP TABLE IF EXISTS " + Constants.PRODUCT_INFO_AND_FOOD_ADDITIVES);
 
         onCreate(db);
     }
 
-    public void addInfo(ProductInformation info){
-        SQLiteDatabase db = this.getWritableDatabase();
-
-        values.put(Constants.BARCODE, info.getBarcode());
-        values.put(Constants.FOOD_ADDITIVES_ID, info.getFoodAdditivesID());
-        values.put(Constants.BASIC_INFO_ID, info.getBasicInfoID());
-        values.put(Constants.PICTURE_ID, info.getPictureID());
-
+    public void setProduct(SQLiteDatabase db, long barcode){
+        ContentValues values = new ContentValues();
+        values.put(Constants.BARCODE, barcode);
         db.insert(Constants.PRODUCTS_INFO, null, values);
-        db.close();
     }
 
-    public void init(SQLiteDatabase db, String value){
-        values.put(Constants.FOOD_ADDITIVES, value);
+    public void setFoodAdditive(SQLiteDatabase db, String text, int id){
+        ContentValues values = new ContentValues();
+        values.put(Constants.FOOD_ADDITIVES, text);
+        values.put(Constants.PRODUCT_ID, id);
         db.insert(Constants.FOOD_ADDITIVES_TABLE, null, values);
+    }
+
+    public void setInfoAboutAdditive(SQLiteDatabase db, String text, String text2, String text3, String text4){
+        ContentValues values = new ContentValues();
+        values.put(Constants.FOOD_ADDITIVES, text);
+        values.put(Constants.ADDITIVE_FULL_NAME, text2);
+        values.put(Constants.FUNCTION, text3);
+        values.put(Constants.DISEASES, text4);
+        db.insert(Constants.ADDITIVE_INFO, null, values);
+    }
+
+    public void fillDatabase(SQLiteDatabase db){
+        setProduct(db, 4770149204152L);
+        setProduct(db, 5014016150821L);
+        setProduct(db, 4770118163091L);
+        setProduct(db, 4770081165566L);
+        setProduct(db, 4820001357288L);
+        setProduct(db, 4770299390583L);
+        setProduct(db, 4770237041089L);
+
+        setFoodAdditive(db, "E211", 2);
+        setFoodAdditive(db, "E621", 1);
+        setFoodAdditive(db, "E301", 1);
+        setFoodAdditive(db, "E450", 2);
+        setFoodAdditive(db, "E451", 2);
+        setFoodAdditive(db, "E120", 1);
+        setFoodAdditive(db, "E250", 1);
+        setFoodAdditive(db, "E316", 1);
+        setFoodAdditive(db, "E250", 1);
+        setFoodAdditive(db, "E202", 2);
+
+
+        setInfoAboutAdditive(db, "E621", "Mononatrio glutamatas", "Aromato ir skonio stipriklis", "Alergija, astma, migrena, vėžiniai susirgimai");
+        setInfoAboutAdditive(db, "E211", "Natrio benzoatas", "Konservantas", "Alergija, astma, hiperaktyvumas, vėžiniai susirgimai");
     }
 }
