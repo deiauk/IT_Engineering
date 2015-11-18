@@ -7,4 +7,8 @@
     <string name="title_activity_search_in_database">SearchInDatabase</string>
     <string name="title_activity_product_information">ProductInformationActivity</string>
     <string name="title_activity_main2">Main2Activity</string>
+    <string name="button_menu_nuskaitytiBarkodai">Nuskaityti barkodai</string>
+    <string name="button_menu_paieska">Paieška pagal priedo pavadinimą</string>
+    <string name="button_menu_skenuoti">Skenuoti barkodą</string>
+    <string name="label_menu_topLabel">Maisto produktų priedų informacija</string>
 </resources>

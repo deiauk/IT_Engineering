@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="button_menu_nuskaitytiBarkodai">Nuskaityti barkodai</string>
+    <string name="button_menu_paieska">Paieška pagal priedo pavadinimą</string>
+    <string name="button_menu_skenuoti">Skenuoti barkodą</string>
+    <string name="label_menu_topLabel">Maisto produktų priedų informacija</string>
+</resources>
