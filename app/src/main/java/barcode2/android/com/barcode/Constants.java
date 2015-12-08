@@ -9,7 +9,7 @@ public interface Constants {
     //name - PRODUCTS_INFO value BARCODE
     String PRODUCTS_INFO = "PRODUCTS_INFO";
     String BARCODE = "BARCODE";
-    String ID = "ID_TABLE";
+    String DATE_COLUMN = "DATE_COLUMN";
 
     //name - FOOD_ADDITIVES_TABLE value FOOD_ADDITIVES (pvz E621, E211) ir ID
     String FOOD_ADDITIVES_TABLE = "FOOD_ADDITIVES_TABLE";
@@ -25,4 +25,8 @@ public interface Constants {
     String ADDITIVE_FULL_NAME = "ADDITIVE_FULL_NAME";
     String FUNCTION = "FUNCTION";
     String DISEASES = "DISEASES";
+
+    String SERVER_ADRESS = "http://deiauk.stud.if.ktu.lt/";
+    String BARCODE_ADR = "searchProduct.php?barcode=";
+    String ADDITIVE = "searchInfoAboutAdditive.php?info=";
 }

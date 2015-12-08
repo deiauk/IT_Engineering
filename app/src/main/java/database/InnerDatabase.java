@@ -4,6 +4,8 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import barcode2.android.com.barcode.Constants;
 
@@ -13,7 +15,7 @@ import barcode2.android.com.barcode.Constants;
 public class InnerDatabase extends SQLiteOpenHelper {
 
     private static final String DB_NAME = "PRODUCTS_DATABASE";
-    private static final int DB_VERSION = 2;
+    private static final int DB_VERSION = 1;
 
     public InnerDatabase(Context context){
         super(context, DB_NAME, null, DB_VERSION);
@@ -22,7 +24,8 @@ public class InnerDatabase extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         db.execSQL("CREATE TABLE " + Constants.PRODUCTS_INFO +
-                " (_id INTEGER PRIMARY KEY AUTOINCREMENT, " + Constants.BARCODE + " BIGINT);");
+                " (_id INTEGER PRIMARY KEY AUTOINCREMENT, " + Constants.BARCODE + " TEXT, " +
+                Constants.DATE_COLUMN + " DATETIME);");
 
         db.execSQL("CREATE TABLE " +
                 Constants.FOOD_ADDITIVES_TABLE + " (_id INTEGER PRIMARY KEY AUTOINCREMENT, " +
@@ -36,7 +39,6 @@ public class InnerDatabase extends SQLiteOpenHelper {
                 Constants.ADDITIVE_ID + " INTEGER, " + Constants.ADDITIVE_FULL_NAME + " TEXT, " + Constants.FUNCTION +
                 " TEXT, " + Constants.DISEASES + " TEXT);");
 
-
         fillDatabase(db);
     }
 
@@ -49,9 +51,10 @@ public class InnerDatabase extends SQLiteOpenHelper {
         onCreate(db);
     }
 
-    public void setProduct(SQLiteDatabase db, long barcode){
+    public void setProduct(SQLiteDatabase db, String barcode){
         ContentValues values = new ContentValues();
         values.put(Constants.BARCODE, barcode);
+        values.put(Constants.DATE_COLUMN, "0000-00-00 00:00:00");
         db.insert(Constants.PRODUCTS_INFO, null, values);
     }
 
@@ -61,11 +64,6 @@ public class InnerDatabase extends SQLiteOpenHelper {
         db.insert(Constants.FOOD_ADDITIVES_TABLE, null, values);
     }
 
-    /*
-      db.execSQL("CREATE TABLE " + Constants.ADDITIVE_INFO + " (_id INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                Constants.ADDITIVE_ID + " INTEGER, " + Constants.ADDITIVE_FULL_NAME + " TEXT, " + Constants.FUNCTION +
-                " TEXT, " + Constants.DISEASES + " TEXT);");
-     */
     public void setInfoAboutAdditive(SQLiteDatabase db, int id, String fullName, String function, String diseases){
         ContentValues values = new ContentValues();
         values.put(Constants.ADDITIVE_ID, id);
@@ -82,14 +80,20 @@ public class InnerDatabase extends SQLiteOpenHelper {
         db.insert(Constants.PRODUCTS_INFO_AND_FOOD_ADDITIVES_TABLE, null, values);
     }
 
+    public void updateBarcodeDate(String barcode, SQLiteDatabase db){
+        ContentValues values = new ContentValues();
+        values.put(Constants.DATE_COLUMN, new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
+        db.update(Constants.PRODUCTS_INFO, values, Constants.BARCODE + "=?", new String[]{barcode});
+    }
+
     public void fillDatabase(SQLiteDatabase db){
-        setProduct(db, 4779028061008L); //1
-        setProduct(db, 5014016150821L); //2
-        setProduct(db, 4770118163091L); //3
-        setProduct(db, 4770081165566L); //4
-        setProduct(db, 4820001357288L); //5
-        setProduct(db, 4770299390583L); //6
-        setProduct(db, 4770237041089L); //7
+        setProduct(db, "1234567890128"); //1
+        setProduct(db, "5014016150821"); //2
+        setProduct(db, "4770118163091"); //3
+        setProduct(db, "4770081165566"); //4
+        setProduct(db, "4820001357288"); //5
+        setProduct(db, "4770299390583"); //6
+        setProduct(db, "4770237041089"); //7
 
         setFoodAdditive(db, "E102"); //1
         setFoodAdditive(db, "E104"); //2
@@ -150,8 +154,10 @@ public class InnerDatabase extends SQLiteOpenHelper {
 
         setRelationship(db, 1, 42);
         setRelationship(db, 1, 16);
-        setRelationship(db, 1, 55);
-        setRelationship(db, 1, 27);
+
+        for(int i=1; i<50; i++){
+            setRelationship(db, 2, i);
+        }
 
 
         setInfoAboutAdditive(db, 1, "Tartrazinas", "Dažiklis", "Alergija, astma, hiperaktyvumas");//E102
