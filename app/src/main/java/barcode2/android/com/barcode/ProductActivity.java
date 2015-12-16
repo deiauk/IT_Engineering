@@ -137,7 +137,7 @@ public class ProductActivity extends Activity {
     public void connection(Context context){
         if(isConnectedToInternet()){
             try {
-                JSONArray array = new NetworkBackgroundTask(context).
+                JSONArray array = new NetworkBackgroundTask().
                         execute(Constants.SERVER_ADRESS + Constants.BARCODE_ADR + barcode).get();
 
                 List<Map<String, String>> employeeList = parse(array);

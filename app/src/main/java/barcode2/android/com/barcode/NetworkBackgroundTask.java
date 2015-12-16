@@ -1,7 +1,7 @@
 package barcode2.android.com.barcode;
 
-import android.content.Context;
 import android.os.AsyncTask;
+
 import org.json.JSONArray;
 
 /**
@@ -9,11 +9,9 @@ import org.json.JSONArray;
  */
 public class NetworkBackgroundTask extends AsyncTask<String, Void, JSONArray>{
 
-    private Context context;
     private ApiConnector apiConnector;
 
-    public NetworkBackgroundTask(Context c){
-        context = c;
+    public NetworkBackgroundTask(){
         apiConnector = new ApiConnector();
     }
 

@@ -10,13 +10,13 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.text.method.ScrollingMovementMethod;
-import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
 import java.util.HashMap;
 import java.util.concurrent.ExecutionException;
 
@@ -117,7 +117,7 @@ public class FoodAdditiveInfoActivity extends Activity {
     public void connection(Context context){
         if(isConnectedToInternet()){
             try {
-                JSONArray array = new NetworkBackgroundTask(context).
+                JSONArray array = new NetworkBackgroundTask().
                         execute(Constants.SERVER_ADRESS + Constants.ADDITIVE + foodAdditive).get();
 
                 HashMap map = parse(array);
