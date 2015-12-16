@@ -48,9 +48,9 @@ public class DatabaseActivity extends AppCompatActivity {
 
         @Override
         protected Cursor doInBackground(Void... voids) {
-            String q = "SELECT _id, " + Constants.BARCODE + ", " + Constants.DATE_COLUMN + " FROM " + Constants.PRODUCTS_INFO +
-                    " WHERE " + Constants.DATE_COLUMN + " != ? ORDER BY " + Constants.DATE_COLUMN + " DESC";
-            cursor = db.rawQuery(q, new String[]{"0000-00-00 00:00:00"});
+            String q = "SELECT _id, " + Constants.BARCODE + ", " + Constants.DATE_COLUMN + " FROM " +
+                    Constants.BARCODE_TABLE + " ORDER BY " + Constants.DATE_COLUMN + " DESC";
+            cursor = db.rawQuery(q, null);
             return cursor;
         }
 
@@ -68,7 +68,9 @@ public class DatabaseActivity extends AppCompatActivity {
                 public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                     String barcode = ((TextView) view.findViewById(R.id.barcode)).getText().toString();
                     Intent intent = new Intent(getApplicationContext(), ProductActivity.class);
+                    intent.putExtra("categoryToDetect", "0");
                     intent.putExtra("barcode", barcode);
+                    intent.putExtra("infoFromInnerDatabase", true);
                     startActivity(intent);
                 }
             });

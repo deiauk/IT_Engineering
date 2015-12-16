@@ -20,13 +20,28 @@ public interface Constants {
     String FOOD_ADDITIVES_ID = "FOOD_ADDITIVES_ID";
 
 
-    String ADDITIVE_INFO = "ADDITIVE_INFO";
     String ADDITIVE_ID = "ADDITIVE_ID";
     String ADDITIVE_FULL_NAME = "ADDITIVE_FULL_NAME";
-    String FUNCTION = "FUNCTION";
-    String DISEASES = "DISEASES";
 
     String SERVER_ADRESS = "http://deiauk.stud.if.ktu.lt/";
     String BARCODE_ADR = "searchProduct.php?barcode=";
     String ADDITIVE = "searchInfoAboutAdditive.php?info=";
+    String FILL_DATABASE = "fillDatabase.php";
+    String FILL_DATABASE2 = "fillFull.php";
+
+
+    String ADDITIVE_TYPE = "ADDITIVE_TYPE";
+    String TYPE = "TYPE";
+
+    String DANGEROUS_TABLE = "DANGEROUS_TABLE";
+    String IS_DANGEROUS = "IS_DANGEROUS";
+
+    String FULL_INFO = "FULL_INFO_TABLE";
+    String CATEGORY_ID = "CATEGORY_ID";
+    String IS_DANGEROUS_ID = "IS_DANGEROUS_ID";
+    String ABOUT_ADDITIVE = "ABOUT_ADDITIVE";
+    String USAGE = "USAGE";
+
+    String BARCODE_TABLE = "BARCODE_TABLE";
+
 }

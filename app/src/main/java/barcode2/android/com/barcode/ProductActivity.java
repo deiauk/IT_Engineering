@@ -10,6 +10,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -36,8 +37,10 @@ public class ProductActivity extends Activity {
     private Cursor cursor;
     private TextView barcodeText;
     private ListView listView;
-    private String barcode;
     private InnerDatabase database;
+    private boolean infoFromInnerDatabase = false;
+    private String barcode;
+    public static String categoryToDetect = "0";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,14 +55,19 @@ public class ProductActivity extends Activity {
 
         Intent intent = getIntent();
         barcode = intent.getStringExtra("barcode");
+        categoryToDetect = intent.getStringExtra("categoryToDetect");
+        infoFromInnerDatabase = intent.getBooleanExtra("infoFromInnerDatabase", false);
+
         barcodeText = (TextView) findViewById(R.id.barcode);
         barcodeText.setText(barcode);
 
         SQLiteOpenHelper helper = new InnerDatabase(this);
         db = helper.getReadableDatabase();
 
-        BackTask backTask = new BackTask(getApplication());
-        backTask.execute(barcode);
+        if(barcode != null) {
+            BackTask backTask = new BackTask(getApplication());
+            backTask.execute(barcode);
+        }
     }
 
     public class BackTask extends AsyncTask<String, Void, Cursor>{
@@ -72,12 +80,29 @@ public class ProductActivity extends Activity {
 
         @Override
         protected Cursor doInBackground(String... strings) {
-            String q = "SELECT a._id, a." + Constants.FOOD_ADDITIVES + ", b." + Constants.ADDITIVE_FULL_NAME  +
-                    " FROM " + Constants.FOOD_ADDITIVES_TABLE + " AS a INNER JOIN " +  Constants.ADDITIVE_INFO +
-                    " AS b ON a._id = b." + Constants.ADDITIVE_ID + " INNER JOIN " + Constants.PRODUCTS_INFO_AND_FOOD_ADDITIVES_TABLE +
-                    " AS c ON a._id = c." + Constants.FOOD_ADDITIVES_ID + " INNER JOIN " + Constants.PRODUCTS_INFO +
-                    " AS d ON c." + Constants.PRODUCT_ID + " = d._id WHERE d." + Constants.BARCODE + " = ?";
-            cursor = db.rawQuery(q, new String[]{strings[0]});
+            if(categoryToDetect != null && categoryToDetect.equals("0")) {
+                Log.d("TAG", "categoryToDetect == null");
+                String q = "SELECT a._id, b." + Constants.FOOD_ADDITIVES + ", a." + Constants.ADDITIVE_FULL_NAME +
+                        " FROM " + Constants.FULL_INFO + " AS a INNER JOIN " + Constants.FOOD_ADDITIVES_TABLE +
+                        " AS b ON a." + Constants.ADDITIVE_ID + " = b._id INNER JOIN " +
+                        Constants.PRODUCTS_INFO_AND_FOOD_ADDITIVES_TABLE + " AS c ON a._id = c."
+                        + Constants.FOOD_ADDITIVES_ID + " INNER JOIN " + Constants.PRODUCTS_INFO +
+                        " AS d ON c." + Constants.PRODUCT_ID + " = d._id WHERE d." + Constants.BARCODE + " = ?";
+
+                cursor = db.rawQuery(q, new String[]{strings[0]});
+            }else{
+                Log.d("TAG", "else !!!!!!");
+                String q = "SELECT a._id, b." + Constants.FOOD_ADDITIVES + ", a." + Constants.ADDITIVE_FULL_NAME +
+                        " FROM " + Constants.FULL_INFO + " AS a INNER JOIN " + Constants.FOOD_ADDITIVES_TABLE +
+                        " AS b ON a." + Constants.ADDITIVE_ID + " = b._id INNER JOIN " +
+                        Constants.PRODUCTS_INFO_AND_FOOD_ADDITIVES_TABLE + " AS c ON a._id = c."
+                        + Constants.FOOD_ADDITIVES_ID + " INNER JOIN " + Constants.PRODUCTS_INFO +
+                        " AS d ON c." + Constants.PRODUCT_ID + " = d._id INNER JOIN " +
+                        Constants.DANGEROUS_TABLE + " AS g ON g._id = a." + Constants.IS_DANGEROUS_ID + " WHERE d." +
+                        Constants.BARCODE + " = ? AND g." + Constants.IS_DANGEROUS + " = ?";
+
+                cursor = db.rawQuery(q, new String[]{strings[0], "%" + categoryToDetect + "%"});
+            }
             return cursor;
         }
 
@@ -85,7 +110,10 @@ public class ProductActivity extends Activity {
         protected void onPostExecute(Cursor cursor) {
             super.onPostExecute(cursor);
             if(cursor.getCount() > 0) {
-                database.updateBarcodeDate(barcode, database.getWritableDatabase());
+                if(!infoFromInnerDatabase) {
+                    int howMany = database.execute(barcode, database.getReadableDatabase());
+                    database.addToAlreadyScannedTable(barcode, database.getWritableDatabase(), howMany);
+                }
                 adapter = new SimpleCursorAdapter(context, R.layout.additive_info_full, cursor,
                         new String[]{Constants.FOOD_ADDITIVES, Constants.ADDITIVE_FULL_NAME},
                         new int[]{R.id.additive, R.id.additive_full_name}, 0);
@@ -118,8 +146,9 @@ public class ProductActivity extends Activity {
                         new String[] {"additive", "full_name"}, new int[]{R.id.additive, R.id.additive_full_name});
                 Toast.makeText(context, "Informacija iš interneto", Toast.LENGTH_LONG).show();
                 listView.setAdapter(itemsAdapter);
-                if(employeeList.size() > 0){
-                    database.updateBarcodeDate(barcode, database.getWritableDatabase());
+                if(employeeList.size() > 0 && !infoFromInnerDatabase){
+                    int howMany = database.execute(barcode, database.getReadableDatabase());
+                    database.addToAlreadyScannedTable(barcode, database.getWritableDatabase(), howMany);
                 }
                 listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override

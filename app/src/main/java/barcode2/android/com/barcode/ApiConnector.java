@@ -14,7 +14,7 @@ import java.net.URL;
  */
 public class ApiConnector{
 
-    public JSONArray getAllInfo(String serverAddress){
+    public static JSONArray getAllInfo(String serverAddress){
         JSONArray array = null;
         HttpURLConnection urlConnection = null;
         try {

@@ -44,7 +44,6 @@ public class SearchInDatabaseActivity extends Activity {
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String finalText) {
-                //keisti!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
                 Intent intent = new Intent(getApplicationContext(), FoodAdditiveInfoActivity.class);
                 intent.putExtra("foodAdditive", finalText);
                 startActivity(intent);
@@ -55,7 +54,7 @@ public class SearchInDatabaseActivity extends Activity {
             public boolean onQueryTextChange(String text) {
                 String q = "SELECT a._id, a." + Constants.FOOD_ADDITIVES + ", b." +
                         Constants.ADDITIVE_FULL_NAME  + " FROM " + Constants.FOOD_ADDITIVES_TABLE +
-                        " AS a INNER JOIN " +  Constants.ADDITIVE_INFO + " AS b ON a._id = b." +
+                        " AS a INNER JOIN " +  Constants.FULL_INFO + " AS b ON a._id = b." +
                         Constants.ADDITIVE_ID + " WHERE " + Constants.FOOD_ADDITIVES + " LIKE ? OR " +
                         Constants.ADDITIVE_FULL_NAME + " LIKE ?";
                 cursor = db.rawQuery(q, new String[]{"%" + text + "%", "%" + text + "%"});
@@ -88,8 +87,8 @@ public class SearchInDatabaseActivity extends Activity {
 
         @Override
         protected Cursor doInBackground(Void... voids) {
-            String q = "SELECT a._id, a." + Constants.FOOD_ADDITIVES + ", b." + Constants.ADDITIVE_FULL_NAME  +
-                    " FROM " + Constants.FOOD_ADDITIVES_TABLE +  " AS a INNER JOIN " +  Constants.ADDITIVE_INFO +
+            String q = "SELECT a._id, a." + Constants.FOOD_ADDITIVES + ", b." + Constants.ADDITIVE_FULL_NAME +
+                    " FROM " + Constants.FOOD_ADDITIVES_TABLE + " AS a INNER JOIN " + Constants.FULL_INFO +
                     " AS b ON a._id = b." + Constants.ADDITIVE_ID;
             cursor = db.rawQuery(q, null);
             return cursor;
